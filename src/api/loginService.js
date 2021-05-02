@@ -2,7 +2,7 @@ import http from '../core/services/http'
 import { buildQueryString } from '../util/url'
 export default {
   signIn(payload) {
-    const url = '/admin/user/login.json'
+    const url = '/login'
     return http.post(url, payload)
   },
 }

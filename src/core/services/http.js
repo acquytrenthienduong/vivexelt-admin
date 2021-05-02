@@ -100,6 +100,8 @@ export const http = {
         init.headers = {}
       }
 
+      init.headers['Content-Type'] = 'application/json'
+
       let response
       response = await timeout(fetch(apiUrl, init), controller, ms)
       if (!response.ok) {

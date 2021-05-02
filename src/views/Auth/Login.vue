@@ -18,23 +18,23 @@
                   ></b-img>
                 </div>
               </div>
-              <validation-observer v-slot="{handleSubmit}" ref="formValidator">
+              <validation-observer v-slot="{ handleSubmit }" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
                   <base-input
                     alternative
                     class="mb-3"
-                    name="Email"
-                    :rules="{required: true, email: true}"
+                    name="Username"
+                    :rules="{ required: true }"
                     prepend-icon="ni ni-email-83"
-                    placeholder="Email"
-                    v-model="email"
+                    placeholder="Username"
+                    v-model="username"
                   ></base-input>
 
                   <base-input
                     alternative
                     class="mb-3"
                     name="Password"
-                    :rules="{required: true, min: 3}"
+                    :rules="{ required: true, min: 3 }"
                     prepend-icon="ni ni-lock-circle-open"
                     type="password"
                     placeholder="Password"
@@ -47,7 +47,8 @@
                       :disabled="isLoading"
                       native-type="submit"
                       class="my-4"
-                    >Sign in</base-button>
+                      >Sign in</base-button
+                    >
                   </div>
                 </b-form>
               </validation-observer>
@@ -72,28 +73,29 @@ import AuthService from '@/core/services/auth'
 export default {
   data() {
     return {
-      email: '',
+      username: '',
       password: '',
-      isLoading: false
-    };
+      isLoading: false,
+    }
   },
   methods: {
     ...mapActions('auth', {
       signIn: 'signIn',
     }),
     async onSubmit() {
-      if (this.email.trim() && this.password.trim()) {
+      if (this.username.trim() && this.password.trim()) {
         this.isLoading = true
-        let result = await this.signIn({ username: this.email, password: this.password })
+        let result = await this.signIn({ username: this.username, password: this.password })
+        console.log(result);
         if (result.success) {
           this.afterSignedIn()
         } else {
           this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'danger',
-          message: result.error_message || 'Something went wrong',
-        })
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'danger',
+            message: result.error_message || 'Something went wrong',
+          })
         }
 
         this.isLoading = false
@@ -101,12 +103,12 @@ export default {
     },
     async afterSignedIn() {
       this.$router.push({ name: 'dashboard' })
-    }
+    },
   },
   mounted() {
     if (AuthService.isAuthenticated()) {
       this.$router.push({ name: 'dashboard' })
     }
-  }
-};
+  },
+}
 </script>

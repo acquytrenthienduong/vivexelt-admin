@@ -10,19 +10,19 @@ const routes = [
     component: DashboardLayout,
     children: [
       {
-        path: "/jobs",
+        path: "/posts",
         name: "jobs",
         meta: { hideFooter: true },
         component: () => import("../views/Jobs/List.vue")
       },
       {
-        path: "/jobs/create",
+        path: "/posts/create",
         name: "jobCreate",
         meta: { hideFooter: true },
         component: () => import("../views/Jobs/CreateNew.vue")
       },
       {
-        path: "/jobs/:id",
+        path: "/post/:id",
         name: "jobUpdate",
         meta: { hideFooter: true },
         component: () => import("../views/Jobs/UpdateJob.vue")

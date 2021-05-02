@@ -12,7 +12,7 @@
     <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success" v-if="!isLoading">
       <!-- Card stats -->
       <b-row>
-        <b-col xl="3" md="6">
+        <!-- <b-col xl="3" md="6">
           <stats-card
             title="Total Jobs"
             type="gradient-red"
@@ -47,7 +47,7 @@
             icon="ni ni-chart-bar-32"
             class="mb-4"
           ></stats-card>
-        </b-col>
+        </b-col> -->
       </b-row>
     </base-header>
     <b-container fluid class="mt--7" v-if="!isLoading">
@@ -140,77 +140,40 @@
                 </b-dropdown>
               </b-collapse>
             </b-card-header>
-            <!-- End Filter -->
             <el-table
               class="table-responsive table dpxm-table"
               header-row-class-name="thead-light"
-              :data="jobs"
+              :data="posts"
               @selection-change="selectionChanged"
             >
               <el-table-column type="selection" width="90"></el-table-column>
-              <el-table-column label="Name" min-width="310px" prop="name">
+              <el-table-column label="Title" min-width="200px" prop="name">
                 <template v-slot="{ row }">
-                  <router-link :to="`/jobs/${row.id}`">
+                  <router-link :to="`/post/${row.id}`">
                     <b-media no-body class="align-items-center">
                       <a href="#" class="avatar rounded-circle mr-3">
                         <img alt="Image placeholder" :src="row.image_url" />
                       </a>
                       <b-media-body>
                         <span class="font-weight-600 name mb-0 text-sm">
-                          {{ row.name }}
+                          {{ row.title }}
                         </span>
                       </b-media-body>
                     </b-media>
                   </router-link>
                 </template>
               </el-table-column>
-              <el-table-column label="Country" prop="country_code" min-width="140px">
+              <el-table-column label="Short Description" prop="short_description" min-width="300px">
                 <template v-slot="{ row }">
                   <span class="font-16">
-                    <b-badge variant="primary">{{ row.country_code }}</b-badge>
+                    <b-badge variant="primary">{{ row.short_description }}</b-badge>
                   </span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="Status" min-width="170px" prop="status">
+              <el-table-column label="Create At" min-width="170px" prop="status">
                 <template v-slot="{ row }">
-                  <badge class="badge-dot mr-4" type>
-                    <i :class="`bg-${getJobStatusType(row.open_at, row.close_at)}`"></i>
-                    <span
-                      class="status"
-                      :class="`text-${getJobStatusType(row.open_at, row.close_at)}`"
-                    >
-                      {{ getJobStatusDisplay(row.open_at, row.close_at) }}
-                    </span>
-                  </badge>
-                </template>
-              </el-table-column>
-
-              <el-table-column label="Minimum Degree" min-width="170px" prop="status">
-                <template v-slot="{ row }">
-                  <span>{{ getMinDegreeDisplay(row.min_degree) }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="Type" min-width="170px" prop="status">
-                <template v-slot="{ row }">
-                  <span class="font-16">
-                    <b-badge :variant="getJobTypeDisplayClass(row.type)">{{
-                      getJobTypeDisplay(row.type)
-                    }}</b-badge>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column label="Action" min-width="140px">
-                <template v-slot="{ row }">
-                  <base-button
-                    icon
-                    type="danger"
-                    class="btn-sm"
-                    @click="toggleConfirmModal(false, row.id)"
-                    title="Delete"
-                  >
-                    <i class="ni ni-fat-remove"></i>
-                  </base-button>
+                  <span>{{ row.createAt }}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -243,6 +206,7 @@ import LightTable from '../Tables/RegularTables/LightTable'
 import { HTTP } from '@/core/http-common'
 import jobService from '@/api/jobService'
 import countryService from '@/api/countryService'
+import postService from '@/api/postService'
 import { Table, TableColumn } from 'element-ui'
 import debounce from 'lodash/debounce'
 import {
@@ -253,6 +217,7 @@ import {
   MinimumDegree,
   JobType,
 } from './constant/constant'
+import { json } from 'd3'
 //import DpmxSelect from "@/components/DpmxSelect";
 
 export default {
@@ -292,6 +257,7 @@ export default {
       entityId: 0,
       visibleBulkAction: false,
       firstTime: true,
+      posts: [],
     }
   },
   computed: {
@@ -322,9 +288,10 @@ export default {
   },
   methods: {
     async init() {
-      await this.filterJobs()
-      await this.getAllFosAndDepartment()
-      await this.getAllCountries()
+      postService.getAllPost().then((data) => {
+        if (!data.success) return
+        this.posts = data.posts
+      })
     },
     async filterJobs() {
       this.isLoading = true

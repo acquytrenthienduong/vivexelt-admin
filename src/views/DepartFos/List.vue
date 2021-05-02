@@ -285,7 +285,6 @@ export default {
       departmentSelected: [],
       visibleActionFos: false,
       visibleActionDepartment: false,
-      isLoading: false,
     }
   },
   computed: {

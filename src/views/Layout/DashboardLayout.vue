@@ -14,21 +14,21 @@
         <sidebar-item
           :link="{
             name: 'Jobs',
-            path: '/jobs',
+            path: '/posts',
             icon: 'ni ni-archive-2 text-red',
           }"
         >
           <sidebar-item
             :link="{
               name: 'List',
-              path: '/jobs',
+              path: '/posts',
               icon: 'ni ni-archive-2 text-red',
             }"
           ></sidebar-item>
           <sidebar-item
             :link="{
               name: 'Create new',
-              path: '/jobs/create',
+              path: '/posts/create',
               icon: 'ni ni-archive-2 text-red',
             }"
           ></sidebar-item>

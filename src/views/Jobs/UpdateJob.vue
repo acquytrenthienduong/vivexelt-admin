@@ -3,47 +3,112 @@
     <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
       <!-- Card stats -->
     </base-header>
-    <b-container fluid class="mt--6" v-if="isLoading">
-      <card> <dpmx-cl></dpmx-cl></card>
+
+    <b-container fluid class="mt--6">
+      <b-row>
+        <b-col xl="12">
+          <card>
+            <b-row align-v="center" slot="header">
+              <b-col>
+                <h3 class="mb-0">Update Post</h3>
+              </b-col>
+            </b-row>
+
+            <b-form @submit.prevent="onSubmit">
+              <div class="pl-lg-4">
+                <b-row>
+                  <b-col lg="8">
+                    <base-input
+                      type="text"
+                      label="Title"
+                      placeholder="Title"
+                      v-model="post.title"
+                      name="Title"
+                      ref="title"
+                      :rules="{ required: true }"
+                    >
+                    </base-input>
+                  </b-col>
+                </b-row>
+              </div>
+              <div class="pl-lg-4">
+                <b-row>
+                  <b-col lg="8">
+                    <base-textarea
+                      type="text"
+                      label="Short Description"
+                      placeholder="Short Description"
+                      v-model="post.short_description"
+                      name="Short Description"
+                      ref="short_description"
+                      :rules="{ required: true, max: 500 }"
+                    >
+                    </base-textarea>
+                  </b-col>
+                </b-row>
+              </div>
+              <div class="pl-lg-4">
+                <b-row>
+                  <b-col lg="8">
+                    <b-form-file
+                      label="Image thumbnail"
+                      @input="fileChanges"
+                      v-model="imgFile"
+                      placeholder="Select file"
+                      drop-placeholder="Drop file here..."
+                      accept="image/jpeg, image/png"
+                      class="button"
+                    ></b-form-file>
+                  </b-col>
+                </b-row>
+              </div>
+              <hr class="my-4" />
+
+              <h6 class="heading-small text-muted mb-4">Long Description</h6>
+              <dpmx-editor
+                :value="post.long_description"
+                v-model="post.long_description"
+                :height="500"
+              />
+
+              <hr class="my-4" />
+              <base-button
+                type="primary"
+                :disabled="submitting"
+                :loading="submitting"
+                native-type="submit"
+                class="my-4"
+              >
+                Update
+              </base-button>
+            </b-form>
+          </card>
+        </b-col>
+      </b-row>
     </b-container>
-    <job-detail
-      :job="job"
-      mode="edit"
-      ref="jobDetail"
-      :submitting="submitting"
-      v-if="!isLoading"
-      v-on:formSubmit="updateJob"
-      @imgChange="onFileChange"
-    ></job-detail>
   </div>
 </template>
 <script>
 import JobDetail from './component/JobDetail'
-import { cloneDeep } from '@/core/utils/common'
 import imageService from '@/api/imageService'
-import jobService from '@/api/jobService'
+import postService from '@/api/postService'
+
 export default {
   components: { JobDetail },
   data() {
     return {
-      job: {
-        image_url: 'img/theme/img-1-1000x900.jpg',
+      post: {
         id: 0,
-        name: '',
+        title: '',
         short_description: '',
         long_description: '',
-        country_code: 'VN',
-        min_degree: 'uni_undergraduate',
-        industry: '',
-        type: 'graduated',
-        application_link: '',
-        reviewed_link: '',
         open_at: new Date(),
         close_at: new Date(new Date().setDate(new Date().getDate() + 1)),
       },
       imageFile: null,
       submitting: false,
       isLoading: false,
+      imgFile: null,
     }
   },
   async mounted() {
@@ -54,88 +119,92 @@ export default {
       // get job
       this.isLoading = true
       const id = this.$route.params.id
-      let res = await jobService.getJobById(id)
-      if (res && res.success && res.job) {
-        res.job.open_at = res.job.open_at * 1000
-        res.job.close_at = res.job.close_at * 1000
-        this.job = res.job
-        this.isLoading = false
-      } else {
-        success = false
-        let errMsg = 'Something went wrong'
-        if (res && !res.success && res.message) {
-          errMsg = res.message
-        }
-        this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'danger',
-          message: errMsg,
-        })
+      let res = await postService.getPostById(id)
+      if (res && res.success) {
+        this.post = res.post
       }
     },
-    async updateJob() {
-      const newJob = cloneDeep(this.job)
-      newJob.open_at = new Date(this.job.open_at.toString()).getTime() / 1000
-      newJob.close_at = new Date(this.job.close_at.toString()).getTime() / 1000
-      // upload image
-      this.submitting = true
-      if (this.imageFile) {
-        const res = await imageService.uploadImage(this.imageFile)
-        if (
-          !this.handleResponseServer(res, (res) => {
-            if (res.image) {
-              newJob.image_url = res.image.src
-              newJob.image_id = res.image.id
-            }
-          })
-        ) {
-          this.submitting = false
-          return
-        }
-      }
-      const jRes = await jobService.updateJob({ job: newJob })
-      if (
-        !this.handleResponseServer(jRes, () => {
+    async onSubmit() {
+      if (this.validate()) {
+        this.post.seoTitle = this.removeAccents(this.post.title)
+        let res = await postService.updatePostById(this.post, this.$route.params.id)
+        console.log(res)
+        if (res && res.success) {
           this.$notify({
             verticalAlign: 'bottom',
             horizontalAlign: 'center',
             type: 'success',
-            message: 'Save job successfully!',
+            message: 'Update success',
           })
-        })
-      ) {
-        this.submitting = false
-        return
+        }
+        else{
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'danger',
+            message: res.message,
+          })
+        }
       }
-      this.submitting = false
     },
-    handleResponseServer(res, doSuccess = null, doFail = null) {
-      let success = true
-      if (res && res.success) {
-        if (doSuccess !== null) {
-          doSuccess(res)
-        }
-      } else {
-        success = false
-        let errMsg = 'Something went wrong'
-        if (res && !res.success && res.error_message) {
-          errMsg = res.error_message
-        }
+    validate() {
+      let refs = this.$refs
+      let valid = true
+      Object.keys(refs).forEach((ref) => {
+        const currentRef = refs[ref]
+        currentRef
+          .validate()
+          .then((res) => {
+            if (!res.valid) {
+              valid = false
+              let errMsg = 'Some fields is not valid'
+              if (res.errors && res.errors.length > 0) {
+                errMsg = res.errors[0]
+              }
+              this.$notify({
+                verticalAlign: 'bottom',
+                horizontalAlign: 'center',
+                type: 'danger',
+                message: errMsg,
+              })
+            }
+          })
+          .catch((c) => console.log(c))
+      })
+      if (
+        (!this.post.short_description && this.post.short_description < 1) ||
+        this.post.short_description.length > 500
+      ) {
         this.$notify({
           verticalAlign: 'bottom',
           horizontalAlign: 'center',
           type: 'danger',
-          message: errMsg,
+          message: 'Short Description is invalid',
         })
-        if (doFail !== null) {
-          doFail(res)
-        }
+        valid = false
       }
-      return success
+      if (!this.post.long_description && this.post.long_description < 1) {
+        this.$notify({
+          verticalAlign: 'bottom',
+          horizontalAlign: 'center',
+          type: 'danger',
+          message: 'Long Description is invalid',
+        })
+        valid = false
+      }
+
+      return valid
     },
-    onFileChange(file) {
-      this.imageFile = file
+    fileChanges(file) {
+      this.post.image_thumbnail = URL.createObjectURL(file)
+      // this.$emit('imgChange', file)
+    },
+    removeAccents(str) {
+      return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
     },
   },
 }
