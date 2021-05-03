@@ -28,6 +28,24 @@ const routes = [
         component: () => import("../views/Jobs/UpdateJob.vue")
       },
       {
+        path: "/gallerys",
+        name: "jobs",
+        meta: { hideFooter: true },
+        component: () => import("../views/Gallerys/List.vue")
+      },
+      {
+        path: "/gallery/create",
+        name: "galleryCreate",
+        meta: { hideFooter: true },
+        component: () => import("../views/Gallerys/CreateNew.vue")
+      },
+      {
+        path: "/gallery/:id",
+        name: "galleryUpdate",
+        meta: { hideFooter: true },
+        component: () => import("../views/Gallerys/UpdateGallery.vue")
+      },
+      {
         path: "/departments",
         name: "departments",
         meta: { hideFooter: true },

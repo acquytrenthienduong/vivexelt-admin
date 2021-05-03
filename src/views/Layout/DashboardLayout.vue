@@ -13,7 +13,7 @@
 
         <sidebar-item
           :link="{
-            name: 'Jobs',
+            name: 'Posts',
             path: '/posts',
             icon: 'ni ni-archive-2 text-red',
           }"
@@ -29,6 +29,29 @@
             :link="{
               name: 'Create new',
               path: '/posts/create',
+              icon: 'ni ni-archive-2 text-red',
+            }"
+          ></sidebar-item>
+        </sidebar-item>
+
+        <sidebar-item
+          :link="{
+            name: 'Gallery',
+            path: '/gallerys',
+            icon: 'ni ni-archive-2 text-red',
+          }"
+        >
+          <sidebar-item
+            :link="{
+              name: 'List',
+              path: '/gallerys',
+              icon: 'ni ni-archive-2 text-red',
+            }"
+          ></sidebar-item>
+          <sidebar-item
+            :link="{
+              name: 'Create new',
+              path: '/gallery/create',
               icon: 'ni ni-archive-2 text-red',
             }"
           ></sidebar-item>
