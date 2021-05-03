@@ -128,7 +128,7 @@
                   <span class="font-16">
                     <img
                       alt="Image placeholder"
-                      src="C:\Users\QA\Desktop\133715771_719646365603875_3407919889700331825_o.jpg"
+                      :src="row.image_thumbnail"
                     />
                   </span>
                 </template>
