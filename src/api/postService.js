@@ -1,3 +1,5 @@
+import { is } from 'date-fns/locale';
+import { forEach } from 'lodash';
 import http from '../core/services/http'
 
 export default {
@@ -16,10 +18,13 @@ export default {
         return http.get(url);
     },
 
-    updatePostById(payload, id){
-        console.log(payload);
-        console.log(id);
+    updatePostById(payload, id) {
         const url = `/post/updatePost/` + id;
         return http.put(url, payload)
+    },
+
+    deletePostById(id, isMultiple) {
+        const url = `/post/deletePost/` + id;
+        return http.post(url)
     }
 }

@@ -43,18 +43,32 @@
                 </b-col>
               </b-row>
             </div>
-            <div class="pl-lg-4">
+            <!-- <div class="pl-lg-4">
               <b-row>
                 <b-col lg="8">
                   <b-form-file
-                    label="Image thumbnail"
                     @input="fileChanges"
                     v-model="imgFile"
                     placeholder="Select file"
                     drop-placeholder="Drop file here..."
                     accept="image/jpeg, image/png"
                     class="button"
+                    name="profile_pic"
                   ></b-form-file>
+                </b-col>
+
+              </b-row>
+            </div> -->
+            <div class="pl-lg-4">
+              <b-row>
+                <b-col lg="8">
+                  <input
+                    type="file"
+                    name="profile_pic"
+                    id="file"
+                    ref="file"
+                    v-on:change="handleFileUpload()"
+                  />
                 </b-col>
               </b-row>
             </div>
@@ -87,15 +101,7 @@
 import flatPicker from 'vue-flatpickr-component'
 import 'flatpickr/dist/flatpickr.css'
 import 'flatpickr/dist/themes/material_green.css'
-import {
-  MapMinimumDegree,
-  MapJobType,
-  MapJobStatus,
-  JobStatus,
-  MinimumDegree,
-  JobType,
-} from '../constant/constant'
-import countryService from '@/api/countryService'
+import { MapMinimumDegree, MapJobType, MinimumDegree, JobType } from '../constant/constant'
 import postService from '@/api/postService'
 
 export default {
@@ -133,7 +139,7 @@ export default {
       },
       countries: [],
       isLoading: false,
-      imgFile: null,
+      file: '',
     }
   },
   computed: {
@@ -177,46 +183,45 @@ export default {
     async init() {
       // await this.getAllCountries()
     },
-    async onSubmit() {
+    onSubmit() {
+      let formData = new FormData()
+      formData.append('profile_pic', this.file)
+      formData.append('title', this.post.title)
+      formData.append('short_description', this.post.short_description)
+      formData.append('long_description', this.post.long_description)
+      this.post.seoTitle = this.removeAccents(this.post.title)
+      formData.append('seoTitle', this.post.seoTitle)
+
       if (this.validate() && this.mode === 'create') {
-        this.post.seoTitle = this.removeAccents(this.post.title)
-        console.log(this.post)
-        let res = await postService.createPost(this.post)
-        console.log(res)
-        if (res && res.success) {
-          this.$notify({
-            verticalAlign: 'bottom',
-            horizontalAlign: 'center',
-            type: 'success',
-            message: 'Create success',
-          })
-        }
+        let res = postService.createPost(formData)
+        this.$notify({
+          verticalAlign: 'bottom',
+          horizontalAlign: 'center',
+          type: 'success',
+          message: 'Create success',
+        })
       }
     },
     validate() {
-      let refs = this.$refs
       let valid = true
-      Object.keys(refs).forEach((ref) => {
-        const currentRef = refs[ref]
-        currentRef
-          .validate()
-          .then((res) => {
-            if (!res.valid) {
-              valid = false
-              let errMsg = 'Some fields is not valid'
-              if (res.errors && res.errors.length > 0) {
-                errMsg = res.errors[0]
-              }
-              this.$notify({
-                verticalAlign: 'bottom',
-                horizontalAlign: 'center',
-                type: 'danger',
-                message: errMsg,
-              })
-            }
-          })
-          .catch((c) => console.log(c))
-      })
+      if (!this.post.title && this.post.title.length < 1) {
+        this.$notify({
+          verticalAlign: 'bottom',
+          horizontalAlign: 'center',
+          type: 'danger',
+          message: 'Title is invalid',
+        })
+        valid = false
+      }
+      if (!this.file && this.file.length < 1) {
+        this.$notify({
+          verticalAlign: 'bottom',
+          horizontalAlign: 'center',
+          type: 'danger',
+          message: 'Image is invalid',
+        })
+        valid = false
+      }
       if (
         (!this.post.short_description && this.post.short_description < 1) ||
         this.post.short_description.length > 500
@@ -239,16 +244,6 @@ export default {
         valid = false
       }
 
-      // if (!this.imgFile && this.mode === 'create') {
-      //   this.$notify({
-      //     verticalAlign: 'bottom',
-      //     horizontalAlign: 'center',
-      //     type: 'danger',
-      //     message: 'Missing job image',
-      //   })
-      //   valid = false
-      // }
-
       return valid
     },
     fileChanges(file) {
@@ -256,6 +251,9 @@ export default {
       // this.$emit('imgChange', file)
     },
 
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0]
+    },
     removeAccents(str) {
       return str
         .normalize('NFD')

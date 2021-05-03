@@ -10,45 +10,7 @@
     </div>
 
     <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success" v-if="!isLoading">
-      <!-- Card stats -->
-      <b-row>
-        <!-- <b-col xl="3" md="6">
-          <stats-card
-            title="Total Jobs"
-            type="gradient-red"
-            :sub-title="totalJobs.toString()"
-            icon="ni ni-active-40"
-            class="mb-4"
-          ></stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card
-            title="Opening"
-            type="gradient-orange"
-            :sub-title="openingJobs.toString()"
-            icon="ni ni-chart-pie-35"
-            class="mb-4"
-          ></stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card
-            title="opening soon"
-            type="gradient-green"
-            :sub-title="soonJobs.toString()"
-            icon="ni ni-money-coins"
-            class="mb-4"
-          ></stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card
-            title="closed"
-            type="gradient-info"
-            :sub-title="closedJobs.toString()"
-            icon="ni ni-chart-bar-32"
-            class="mb-4"
-          ></stats-card>
-        </b-col> -->
-      </b-row>
+      <b-row> </b-row>
     </base-header>
     <b-container fluid class="mt--7" v-if="!isLoading">
       <b-row>
@@ -147,13 +109,10 @@
               @selection-change="selectionChanged"
             >
               <el-table-column type="selection" width="90"></el-table-column>
-              <el-table-column label="Title" min-width="200px" prop="name">
+              <el-table-column label="Title" min-width="100px" prop="name">
                 <template v-slot="{ row }">
                   <router-link :to="`/post/${row.id}`">
                     <b-media no-body class="align-items-center">
-                      <a href="#" class="avatar rounded-circle mr-3">
-                        <img alt="Image placeholder" :src="row.image_url" />
-                      </a>
                       <b-media-body>
                         <span class="font-weight-600 name mb-0 text-sm">
                           {{ row.title }}
@@ -163,17 +122,35 @@
                   </router-link>
                 </template>
               </el-table-column>
-              <el-table-column label="Short Description" prop="short_description" min-width="300px">
+
+              <el-table-column label="Image thumbnail" prop="short_description" min-width="300px">
                 <template v-slot="{ row }">
                   <span class="font-16">
-                    <b-badge variant="primary">{{ row.short_description }}</b-badge>
+                    <img
+                      alt="Image placeholder"
+                      src="C:\Users\QA\Desktop\133715771_719646365603875_3407919889700331825_o.jpg"
+                    />
                   </span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="Create At" min-width="170px" prop="status">
+              <el-table-column label="Create At" min-width="150px" prop="status">
                 <template v-slot="{ row }">
-                  <span>{{ row.createAt }}</span>
+                  <span>{{ new Date(row.createAt) }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="Action" min-width="130px">
+                <template v-slot="{ row }">
+                  <base-button
+                    icon
+                    type="danger"
+                    class="btn-sm"
+                    @click="toggleConfirmModal(false, row.id)"
+                    title="Delete"
+                  >
+                    <i class="ni ni-fat-remove"></i>
+                  </base-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -404,7 +381,7 @@ export default {
         this.confirmModal.message = `Delete this job?`
       } else {
         let length = this.jobSelected.length
-        let total = this.totalJobs
+        let total = this.posts.length
         this.confirmModal.message = `Delete ${length} out of ${total}?`
       }
     },
@@ -454,35 +431,50 @@ export default {
       let res = {}
       let ids = []
       if (this.deleteMode === 'single') {
-        ids.push(this.entityId)
+        res = await postService.deletePostById(this.entityId)
+        if (!res || !res.success || res.error_message) {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'danger',
+            message: res.error_message || 'Something went wrong',
+          })
+        } else {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'success',
+            message: `Delete job successfully`,
+          })
+          await this.init()
+          this.isLoading = false
+          this.closeConfirmModal()
+        }
       } else {
         this.jobSelected.forEach((e) => {
-          ids.push(e.id)
+          postService.deletePostById(e.id).then((res) => {
+            if (res && res.success) {
+              this.$notify({
+                verticalAlign: 'bottom',
+                horizontalAlign: 'center',
+                type: 'success',
+                message: `Delete job successfully`,
+              })
+            } else {
+              this.$notify({
+                verticalAlign: 'bottom',
+                horizontalAlign: 'center',
+                type: 'danger',
+                message: res.error_message || 'Something went wrong',
+              })
+            }
+          })
         })
       }
-      res = await jobService.deleteJob({
-        ids: ids,
-      })
-      if (!res || !res.success || res.error_message) {
-        this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'danger',
-          message: res.error_message || 'Something went wrong',
-        })
-      } else {
-        this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'success',
-          message: `Delete job successfully`,
-        })
-        await this.filterJobs()
-        this.isLoading = false
-        this.closeConfirmModal()
-      }
+
+      this.isLoading = false;
+      this.closeConfirmModal()
     },
-    gotoUpdate(id) {},
   },
   mounted() {
     this.init()

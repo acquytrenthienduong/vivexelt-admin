@@ -3,6 +3,6 @@ import { buildQueryString } from '../util/url'
 export default {
   signIn(payload) {
     const url = '/login'
-    return http.post(url, payload)
+    return http.post(url, payload, {}, true)
   },
 }

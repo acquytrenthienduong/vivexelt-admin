@@ -50,7 +50,7 @@ export function timeout(promise, controller, ms) {
 }
 
 export const http = {
-  async request(method, url, data, options = {}, useHeader = true) {
+  async request(method, url, data, options = {}, useHeader = true, isLogin) {
     try {
       const fullUrl = url.indexOf('http') === 0
       let apiDomain = process.env.VUE_APP_BASE_API_ENDPOINT || '/'
@@ -81,7 +81,6 @@ export const http = {
       if (token) {
         init.headers = Object.assign(init.headers, token)
       }
-
       if (!isEmpty(data)) {
         init.body = JSON.stringify(data)
       }
@@ -100,7 +99,9 @@ export const http = {
         init.headers = {}
       }
 
-      init.headers['Content-Type'] = 'application/json'
+      if (isLogin) {
+        init.headers['Content-Type'] = 'application/json'
+      }
 
       let response
       response = await timeout(fetch(apiUrl, init), controller, ms)
@@ -155,8 +156,8 @@ export const http = {
   get(url, options) {
     return this.request('get', url, {}, options)
   },
-  post(url, data, options) {
-    return this.request('post', url, data, options)
+  post(url, data, options, isLogin) {
+    return this.request('post', url, data, options, true, isLogin)
   },
   put(url, data, options) {
     return this.request('put', url, data, options)

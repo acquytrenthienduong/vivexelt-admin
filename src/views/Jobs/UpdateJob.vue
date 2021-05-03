@@ -50,15 +50,14 @@
               <div class="pl-lg-4">
                 <b-row>
                   <b-col lg="8">
-                    <b-form-file
-                      label="Image thumbnail"
-                      @input="fileChanges"
-                      v-model="imgFile"
-                      placeholder="Select file"
-                      drop-placeholder="Drop file here..."
-                      accept="image/jpeg, image/png"
-                      class="button"
-                    ></b-form-file>
+                    <input
+                      type="file"
+                      name="profile_pic"
+                      id="file"
+                      ref="file"
+                      v-on:change="handleFileUpload()"
+                    />
+
                   </b-col>
                 </b-row>
               </div>
@@ -102,13 +101,11 @@ export default {
         title: '',
         short_description: '',
         long_description: '',
-        open_at: new Date(),
-        close_at: new Date(new Date().setDate(new Date().getDate() + 1)),
       },
       imageFile: null,
       submitting: false,
       isLoading: false,
-      imgFile: null,
+      file: '',
     }
   },
   async mounted() {
@@ -122,55 +119,60 @@ export default {
       let res = await postService.getPostById(id)
       if (res && res.success) {
         this.post = res.post
+        console.log(res.post);
       }
     },
-    async onSubmit() {
+    onSubmit() {
+      let formData = new FormData()
+      formData.append('profile_pic', this.file)
+      formData.append('title', this.post.title)
+      formData.append('short_description', this.post.short_description)
+      formData.append('long_description', this.post.long_description)
+      this.post.seoTitle = this.removeAccents(this.post.title)
+      formData.append('seoTitle', this.post.seoTitle)
       if (this.validate()) {
-        this.post.seoTitle = this.removeAccents(this.post.title)
-        let res = await postService.updatePostById(this.post, this.$route.params.id)
-        console.log(res)
-        if (res && res.success) {
-          this.$notify({
-            verticalAlign: 'bottom',
-            horizontalAlign: 'center',
-            type: 'success',
-            message: 'Update success',
-          })
-        }
-        else{
-          this.$notify({
-            verticalAlign: 'bottom',
-            horizontalAlign: 'center',
-            type: 'danger',
-            message: res.message,
-          })
-        }
-      }
-    },
-    validate() {
-      let refs = this.$refs
-      let valid = true
-      Object.keys(refs).forEach((ref) => {
-        const currentRef = refs[ref]
-        currentRef
-          .validate()
-          .then((res) => {
-            if (!res.valid) {
-              valid = false
-              let errMsg = 'Some fields is not valid'
-              if (res.errors && res.errors.length > 0) {
-                errMsg = res.errors[0]
-              }
+        postService
+          .updatePostById(formData, this.$route.params.id)
+          .then((result) => {
+            if (result && result.success) {
               this.$notify({
                 verticalAlign: 'bottom',
                 horizontalAlign: 'center',
-                type: 'danger',
-                message: errMsg,
+                type: 'success',
+                message: 'Update success',
               })
             }
           })
-          .catch((c) => console.log(c))
-      })
+          .catch((err) => {
+            this.$notify({
+              verticalAlign: 'bottom',
+              horizontalAlign: 'center',
+              type: 'danger',
+              message: err.message,
+            })
+          })
+      }
+    },
+    validate() {
+      let valid = true
+      if (!this.post.title && this.post.title.length < 1) {
+        this.$notify({
+          verticalAlign: 'bottom',
+          horizontalAlign: 'center',
+          type: 'danger',
+          message: 'Title is invalid',
+        })
+        valid = false
+      }
+      if (!this.file && this.file.length < 1) {
+        this.$notify({
+          verticalAlign: 'bottom',
+          horizontalAlign: 'center',
+          type: 'danger',
+          message: 'Image is invalid',
+        })
+        valid = false
+      }
       if (
         (!this.post.short_description && this.post.short_description < 1) ||
         this.post.short_description.length > 500
@@ -195,9 +197,8 @@ export default {
 
       return valid
     },
-    fileChanges(file) {
-      this.post.image_thumbnail = URL.createObjectURL(file)
-      // this.$emit('imgChange', file)
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0]
     },
     removeAccents(str) {
       return str
