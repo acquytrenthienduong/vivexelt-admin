@@ -9,89 +9,87 @@
               <h3 class="mb-0">{{ title }}</h3>
             </b-col>
           </b-row>
-
-          <b-form @submit.prevent="onSubmit">
-            <div class="pl-lg-4">
-              <b-row>
-                <b-col lg="8">
-                  <base-input
-                    type="text"
-                    label="Title"
-                    placeholder="Title"
-                    v-model="post.title"
-                    name="Title"
-                    ref="title"
-                    :rules="{ required: true }"
-                  >
-                  </base-input>
-                </b-col>
-              </b-row>
-            </div>
-            <div class="pl-lg-4">
-              <b-row>
-                <b-col lg="8">
-                  <base-textarea
-                    type="text"
-                    label="Short Description"
-                    placeholder="Short Description"
-                    v-model="post.short_description"
-                    name="Short Description"
-                    ref="short_description"
-                    :rules="{ required: true, max: 500 }"
-                  >
-                  </base-textarea>
-                </b-col>
-              </b-row>
-            </div>
-
-            <div class="pl-lg-4">
-              <b-row>
-                <b-col lg="8">
-                  <base-textarea
-                    type="text"
-                    label="Long Description"
-                    placeholder="Long Description"
-                    v-model="post.long_description"
-                    name="Long Description"
-                    ref="Long Description"
-                    :rules="{ required: true, max: 1000 }"
-                  >
-                  </base-textarea>
-                </b-col>
-              </b-row>
-            </div>
-
-            <div class="pl-lg-4">
-              <b-row>
-                <b-col lg="8">
-                  <img :src="post.image_thumbnail" width="200px" />
+          <b-row>
+            <b-col lg="8">
+              <b-form @submit.prevent="onSubmit">
+                <div class="pl-lg-4">
                   <b-row>
-                    <b-col>
-                      <b-form-file
-                        @input="fileChanges"
-                        v-model="imgFile"
-                        placeholder="Select file"
-                        drop-placeholder="Drop file here..."
-                        accept="image/jpeg, image/png"
-                        class="button"
-                      ></b-form-file>
+                    <b-col lg="12">
+                      <b-row>
+                        <b-col>
+                          <base-input
+                            type="text"
+                            label="Title"
+                            placeholder="Title"
+                            v-model="post.title"
+                            name="Title"
+                            ref="title"
+                            :rules="{ required: true }"
+                          >
+                          </base-input>
+                        </b-col>
+                      </b-row>
                     </b-col>
                   </b-row>
-                </b-col>
-              </b-row>
-            </div>
-
-            <hr class="my-4" />
-            <base-button
-              type="primary"
-              :disabled="submitting"
-              :loading="submitting"
-              native-type="submit"
-              class="my-4"
-            >
-              {{ btnSubmitTitle }}
-            </base-button>
-          </b-form>
+                </div>
+                <div class="pl-lg-4">
+                  <b-row>
+                    <b-col>
+                      <base-input
+                        type="text"
+                        label="Link Video"
+                        placeholder="Link Video"
+                        v-model="post.link_video"
+                        name="Link Video"
+                        ref="Link Video"
+                        :rules="{ required: true }"
+                      >
+                      </base-input>
+                    </b-col>
+                  </b-row>
+                </div>
+                <div class="pl-lg-4">
+                  <b-row>
+                    <b-col>
+                      <base-textarea
+                        type="text"
+                        label="Short Description"
+                        placeholder="Short Description"
+                        v-model="post.short_description"
+                        name="Short Description"
+                        ref="short_description"
+                        :rules="{ required: true, max: 500 }"
+                      >
+                      </base-textarea>
+                    </b-col>
+                  </b-row>
+                </div>
+                <hr class="my-4" />
+                <base-button
+                  type="primary"
+                  :disabled="submitting"
+                  :loading="submitting"
+                  native-type="submit"
+                  class="my-4"
+                >
+                  {{ btnSubmitTitle }}
+                </base-button>
+              </b-form>
+            </b-col>
+            <b-col lg="4">
+              <img :src="post.image_thumbnail" width="100%" />
+              <label class="form-control-label">Link video</label>
+              <b-form-file
+                @input="fileChanges"
+                v-model="imgFile"
+                placeholder="Select file"
+                drop-placeholder="Drop file here..."
+                accept="image/jpeg, image/png"
+                class="button"
+                title="sadas"
+              ></b-form-file>
+            </b-col>
+          </b-row>
         </card>
       </b-col>
     </b-row>
@@ -114,7 +112,7 @@ export default {
         return {
           title: '',
           short_description: '',
-          long_description: '',
+          link_video: '',
           image_thumbnail: '',
           seoTitle: '',
           imgFile: null,
@@ -141,6 +139,7 @@ export default {
       countries: [],
       isLoading: false,
       file: '',
+      imgFile: null,
     }
   },
   computed: {
@@ -189,7 +188,7 @@ export default {
       formData.append('profile_pic', this.imgFile)
       formData.append('title', this.post.title)
       formData.append('short_description', this.post.short_description)
-      formData.append('long_description', this.post.long_description)
+      formData.append('link_video', this.post.link_video)
       this.post.seoTitle = this.removeAccents(this.post.title)
       formData.append('seoTitle', this.post.seoTitle)
 
@@ -227,12 +226,12 @@ export default {
         })
         valid = false
       }
-      if (!this.post.long_description && this.post.long_description < 1) {
+      if (!this.post.link_video && this.post.link_video < 1) {
         this.$notify({
           verticalAlign: 'bottom',
           horizontalAlign: 'center',
           type: 'danger',
-          message: 'Long Description is invalid',
+          message: 'Link video is invalid',
         })
         valid = false
       }

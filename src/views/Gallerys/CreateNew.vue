@@ -14,54 +14,55 @@
                 <h3 class="mb-0">Create Gallery</h3>
               </b-col>
             </b-row>
-
-            <b-form @submit.prevent="onSubmit">
-              <div class="pl-lg-4">
-                <b-row>
-                  <b-col lg="8">
-                    <base-input
-                      type="number"
-                      label="Position"
-                      placeholder="Position"
-                      v-model="gallery.position"
-                      name="Position"
-                      ref="Position"
-                      :rules="{ required: true }"
-                    >
-                    </base-input>
-                  </b-col>
-                </b-row>
-              </div>
-
-              <div class="pl-lg-4">
-                <b-row>
-                  <b-col lg="8">
-                    <img :src="gallery.path" width="200px" />
+            <b-row>
+              <b-col lg="8">
+                <b-form @submit.prevent="onSubmit">
+                  <div class="pl-lg-4">
                     <b-row>
                       <b-col>
-                        <b-form-file
-                          @input="fileChanges"
-                          v-model="imgFile"
-                          placeholder="Select file"
-                          drop-placeholder="Drop file here..."
-                          accept="image/jpeg, image/png"
-                          class="button"
-                        ></b-form-file>
+                        <base-input
+                          type="number"
+                          label="Position"
+                          placeholder="Position"
+                          v-model="gallery.position"
+                          name="Position"
+                          ref="Position"
+                          :rules="{ required: true }"
+                        >
+                        </base-input>
                       </b-col>
                     </b-row>
-                  </b-col>
-                </b-row>
-              </div>
-              <base-button
-                type="primary"
-                :disabled="submitting"
-                :loading="submitting"
-                native-type="submit"
-                class="my-4"
-              >
-                Create
-              </base-button>
-            </b-form>
+                  </div>
+
+                  <div class="pl-lg-4">
+                    <b-row>
+                      <b-col lg="8"> </b-col>
+                    </b-row>
+                  </div>
+                  <base-button
+                    type="primary"
+                    :disabled="submitting"
+                    :loading="submitting"
+                    native-type="submit"
+                    class="my-4"
+                  >
+                    Create
+                  </base-button>
+                </b-form>
+              </b-col>
+              <b-col lg="4">
+                <img :src="gallery.path" width="100%" />
+                <label class="form-control-label">Image</label>
+                <b-form-file
+                  @input="fileChanges"
+                  v-model="imgFile"
+                  placeholder="Select file"
+                  drop-placeholder="Drop file here..."
+                  accept="image/jpeg, image/png"
+                  class="button"
+                ></b-form-file>
+              </b-col>
+            </b-row>
           </card>
         </b-col>
       </b-row>
@@ -97,8 +98,10 @@ export default {
           verticalAlign: 'bottom',
           horizontalAlign: 'center',
           type: 'success',
-          message: 'Create success',
+          message: 'Create success11',
         })
+        this.$router.push({ name: 'gallerys' })
+
         // }
       }
     },

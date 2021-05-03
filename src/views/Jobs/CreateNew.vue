@@ -26,7 +26,7 @@ export default {
         id: 0,
         name: '',
         short_description: '',
-        long_description: '',
+        link_video: '',
         country_code: 'VN',
         min_degree: 'uni_undergraduate',
         industry: '',

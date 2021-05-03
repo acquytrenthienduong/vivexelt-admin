@@ -26,75 +26,9 @@
                 </div>
                 <b-form-input placeholder="Search" type="text" v-model="filter.name"></b-form-input>
                 <b-input-group-append>
-                  <b-button v-b-toggle.collapse-1 variant="info">More filters</b-button>
+                  <b-button v-b-toggle.collapse-1 variant="info">Search</b-button>
                 </b-input-group-append>
               </b-input-group>
-              <b-collapse id="collapse-1" class="mt-2">
-                <b-card>
-                  <b-row>
-                    <b-col>
-                      <label class="mr-sm-2" for="inline-form-custom-select-pref">
-                        Field Of Study
-                      </label>
-                      <dpmx-select
-                        v-model="filter.foses"
-                        :options="fieldOfStudies"
-                        label="name"
-                        trackBy="id"
-                        :multiple="true"
-                      />
-                    </b-col>
-                    <b-col>
-                      <label class="mr-sm-2" for="inline-form-custom-select-pref">
-                        Department
-                      </label>
-                      <dpmx-select
-                        v-model="filter.departments"
-                        :options="departments"
-                        label="name"
-                        trackBy="id"
-                        :multiple="true"
-                      ></dpmx-select>
-                    </b-col>
-                    <b-col>
-                      <label class="mr-sm-2" for="inline-form-custom-select-pref">Country</label>
-                      <dpmx-select
-                        v-model="filter.countries_code"
-                        :options="countries"
-                        label="country_name"
-                        trackBy="code"
-                        :multiple="true"
-                      ></dpmx-select>
-                    </b-col>
-                  </b-row>
-                  <b-row class="pt-15">
-                    <b-col>
-                      <label class="mr-sm-2" for="inline-form-custom-select-pref"> Status </label>
-                      <dpmx-select v-model="filter.status" :options="getJobStatus" label="name" />
-                    </b-col>
-
-                    <b-col>
-                      <label class="mr-sm-2" for="inline-form-custom-select-pref"
-                        >Minimum Degree</label
-                      >
-                      <dpmx-select
-                        v-model="filter.min_degree"
-                        :options="getMinimumDegrees"
-                        label="name"
-                        trackBy="value"
-                      ></dpmx-select>
-                    </b-col>
-                    <b-col>
-                      <label class="mr-sm-2" for="inline-form-custom-select-pref">Type</label>
-                      <dpmx-select
-                        v-model="filter.type"
-                        :options="getJobTypes"
-                        label="name"
-                      ></dpmx-select>
-                    </b-col>
-                  </b-row>
-                </b-card>
-              </b-collapse>
               <b-collapse id="collapse-4" v-model="visibleBulkAction" class="mt-2">
                 <span class="pr-15">{{ jobSelected.length }} selected</span>
                 <b-dropdown id="dropdown-1" variant="secondary" text="Action" class="m-md-2">
@@ -127,6 +61,14 @@
                 <template v-slot="{ row }">
                   <span class="font-16">
                     <img alt="Image placeholder" width="50px" :src="url + row.id" />
+                  </span>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="Link video" min-width="300px">
+                <template v-slot="{ row }">
+                  <span class="font-16">
+                    <a :href="row.link_video">Link video</a>
                   </span>
                 </template>
               </el-table-column>
@@ -287,7 +229,7 @@ export default {
       }
     ),
     changePage(val) {
-      console.log(val);
+      console.log(val)
       this.filter.page = val
     },
     buildParamsForFilter() {

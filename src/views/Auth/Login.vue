@@ -20,6 +20,7 @@
               </div>
               <validation-observer v-slot="{ handleSubmit }" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
+                  <div v-if="check" style="color: red;">Wrong username or password</div>
                   <base-input
                     alternative
                     class="mb-3"
@@ -54,14 +55,6 @@
               </validation-observer>
             </b-card-body>
           </b-card>
-          <b-row class="mt-3">
-            <b-col cols="6"></b-col>
-            <b-col cols="6" class="text-right">
-              <router-link to="/register" class="text-light">
-                <small>Forgot password?</small>
-              </router-link>
-            </b-col>
-          </b-row>
         </b-col>
       </b-row>
     </b-container>
@@ -76,6 +69,8 @@ export default {
       username: '',
       password: '',
       isLoading: false,
+      check: false,
+      text: '',
     }
   },
   methods: {
@@ -86,18 +81,20 @@ export default {
       if (this.username.trim() && this.password.trim()) {
         this.isLoading = true
         let result = await this.signIn({ username: this.username, password: this.password })
-        console.log(result);
+        console.log(result)
+
         if (result.success) {
           this.afterSignedIn()
         } else {
+          this.check = true
+          console.log(this.check)
           this.$notify({
             verticalAlign: 'bottom',
             horizontalAlign: 'center',
             type: 'danger',
-            message: result.error_message || 'Something went wrong',
+            message: result.message || 'Something went wrong',
           })
         }
-
         this.isLoading = false
       }
     },

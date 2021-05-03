@@ -15,12 +15,7 @@
     <b-navbar-nav class="align-items-center ml-md-auto">
       <!-- This item dont have <b-nav-item> because item have data-action/data-target on tag <a>, wich we cant add -->
       <li class="nav-item d-sm-none">
-        <a
-          class="nav-link"
-          href="#"
-          data-action="search-show"
-          data-target="#navbar-search-main"
-        >
+        <a class="nav-link" href="#" data-action="search-show" data-target="#navbar-search-main">
           <i class="ni ni-zoom-split-in"></i>
         </a>
       </li>
@@ -64,7 +59,7 @@
           <div class="dropdown-divider"></div>
           <b-dropdown-item href="#!">
             <i class="ni ni-user-run"></i>
-            <span>Logout</span>
+            <span v-on:click="() => logout()">Logout</span>
           </b-dropdown-item>
         </template>
       </base-dropdown>
@@ -72,47 +67,49 @@
   </base-nav>
 </template>
 <script>
-import { CollapseTransition } from "vue2-transitions";
-import { BaseNav, Modal } from "@/components";
+import { CollapseTransition } from 'vue2-transitions'
+import { BaseNav, Modal } from '@/components'
 
 export default {
   components: {
     CollapseTransition,
     BaseNav,
-    Modal
+    Modal,
   },
   props: {
     type: {
       type: String,
-      default: "default", // default|light
-      description:
-        "Look of the dashboard navbar. Default (Green) or light (gray)"
-    }
+      default: 'default', // default|light
+      description: 'Look of the dashboard navbar. Default (Green) or light (gray)',
+    },
   },
   computed: {
     routeName() {
-      const { name } = this.$route;
-      return this.capitalizeFirstLetter(name);
-    }
+      const { name } = this.$route
+      return this.capitalizeFirstLetter(name)
+    },
   },
   data() {
     return {
       activeNotifications: false,
       showMenu: false,
       searchModalVisible: false,
-      searchQuery: ""
-    };
+      searchQuery: '',
+    }
   },
   methods: {
     capitalizeFirstLetter(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
+      return string.charAt(0).toUpperCase() + string.slice(1)
     },
     toggleNotificationDropDown() {
-      this.activeNotifications = !this.activeNotifications;
+      this.activeNotifications = !this.activeNotifications
     },
     closeDropDown() {
-      this.activeNotifications = false;
-    }
-  }
-};
+      this.activeNotifications = false
+    },
+    logout() {
+      this.$router.push({ name: 'logout' })
+    },
+  },
+}
 </script>

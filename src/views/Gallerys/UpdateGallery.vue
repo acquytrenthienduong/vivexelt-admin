@@ -14,54 +14,50 @@
                 <h3 class="mb-0">Update Gallery</h3>
               </b-col>
             </b-row>
-
-            <b-form @submit.prevent="onSubmit">
-              <div class="pl-lg-4">
-                <b-row>
-                  <b-col lg="8">
-                    <base-input
-                      type="number"
-                      label="Position"
-                      placeholder="Position"
-                      v-model="gallery.position"
-                      name="Position"
-                      ref="Position"
-                      :rules="{ required: true }"
-                    >
-                    </base-input>
-                  </b-col>
-                </b-row>
-              </div>
-
-              <div class="pl-lg-4">
-                <b-row>
-                  <b-col lg="8">
-                    <img :src="gallery.path" width="200px" />
+            <b-row>
+              <b-col lg="8"
+                ><b-form @submit.prevent="onSubmit">
+                  <div class="pl-lg-4">
                     <b-row>
                       <b-col>
-                        <b-form-file
-                          @input="fileChanges"
-                          v-model="imgFile"
-                          placeholder="Select file"
-                          drop-placeholder="Drop file here..."
-                          accept="image/jpeg, image/png"
-                          class="button"
-                        ></b-form-file>
+                        <base-input
+                          type="number"
+                          label="Position"
+                          placeholder="Position"
+                          v-model="gallery.position"
+                          name="Position"
+                          ref="Position"
+                          :rules="{ required: true }"
+                        >
+                        </base-input>
                       </b-col>
                     </b-row>
-                  </b-col>
-                </b-row>
-              </div>
-              <base-button
-                type="primary"
-                :disabled="submitting"
-                :loading="submitting"
-                native-type="submit"
-                class="my-4"
+                  </div>
+                  <base-button
+                    type="primary"
+                    :disabled="submitting"
+                    :loading="submitting"
+                    native-type="submit"
+                    class="my-4"
+                  >
+                    Update
+                  </base-button>
+                </b-form></b-col
               >
-                Update
-              </base-button>
-            </b-form>
+              <b-col lg="4">
+                <img :src="gallery.path" width="100%" />
+                <label class="form-control-label">Image</label>
+
+                <b-form-file
+                  @input="fileChanges"
+                  v-model="imgFile"
+                  placeholder="Select file"
+                  drop-placeholder="Drop file here..."
+                  accept="image/jpeg, image/png"
+                  class="button"
+                ></b-form-file>
+              </b-col>
+            </b-row>
           </card>
         </b-col>
       </b-row>
@@ -99,7 +95,11 @@ export default {
     },
     async onSubmit() {
       let formData = new FormData()
-      formData.append('profile_pic', this.imgFile)
+      formData.append('profile_pic', null)
+      if (this.imgFile != null) {
+        formData.append('profile_pic', this.imgFile)
+      }
+      // formData.append('profile_pic', this.imgFile)
       formData.append('position', this.gallery.position)
 
       if (this.validate()) {
@@ -113,6 +113,7 @@ export default {
                 type: 'success',
                 message: 'Update success',
               })
+              this.$router.push({ name: 'gallerys' })
             }
           })
           .catch((err) => {
