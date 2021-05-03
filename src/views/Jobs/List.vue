@@ -116,7 +116,6 @@
                       <b-media-body>
                         <span class="font-weight-600 name mb-0 text-sm">
                           {{ row.title }}
-                          {{ row.id }}
                         </span>
                       </b-media-body>
                     </b-media>
