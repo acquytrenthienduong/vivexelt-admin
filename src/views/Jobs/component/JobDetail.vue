@@ -201,6 +201,7 @@ export default {
           type: 'success',
           message: 'Create success',
         })
+        this.$router.push({ name: 'jobs' })
       }
     },
     validate() {

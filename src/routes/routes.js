@@ -29,7 +29,7 @@ const routes = [
       },
       {
         path: "/gallerys",
-        name: "jobs",
+        name: "gallerys",
         meta: { hideFooter: true },
         component: () => import("../views/Gallerys/List.vue")
       },

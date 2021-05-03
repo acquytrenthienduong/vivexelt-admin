@@ -116,6 +116,7 @@
                       <b-media-body>
                         <span class="font-weight-600 name mb-0 text-sm">
                           {{ row.title }}
+                          {{ row.id }}
                         </span>
                       </b-media-body>
                     </b-media>
@@ -126,11 +127,7 @@
               <el-table-column label="Image thumbnail" prop="short_description" min-width="300px">
                 <template v-slot="{ row }">
                   <span class="font-16">
-                    <img
-                      alt="Image placeholder"
-                      width="200px"
-                      :src="url + row.id"
-                    />
+                    <img alt="Image placeholder" width="50px" :src="url + row.id" />
                   </span>
                 </template>
               </el-table-column>
@@ -236,7 +233,7 @@ export default {
       visibleBulkAction: false,
       firstTime: true,
       posts: [],
-      url: 'http://localhost:3000/post/sendImagePost/'
+      url: 'http://localhost:3000/post/sendImagePost/',
     }
   },
   computed: {
@@ -267,9 +264,11 @@ export default {
   },
   methods: {
     async init() {
-      postService.getAllPost().then((data) => {
+      postService.getAllPost(this.filter.page, this.filter.limit).then((data) => {
+        console.log(data)
         if (!data.success) return
         this.posts = data.posts
+        this.totalJobs = data.total
       })
     },
     async filterJobs() {
@@ -289,6 +288,7 @@ export default {
       }
     ),
     changePage(val) {
+      console.log(val);
       this.filter.page = val
     },
     buildParamsForFilter() {
@@ -474,7 +474,7 @@ export default {
         })
       }
 
-      this.isLoading = false;
+      this.isLoading = false
       this.closeConfirmModal()
     },
   },
@@ -484,7 +484,7 @@ export default {
   watch: {
     filter: {
       handler(val) {
-        this.debounceFetchOrdersData()
+        this.init()
       },
       deep: true,
     },

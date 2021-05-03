@@ -3,8 +3,8 @@ import { forEach } from 'lodash';
 import http from '../core/services/http'
 
 export default {
-    getAllPost() {
-        const url = '/post/getAllPost'
+    getAllPost(page, limit) {
+        const url = `/post/getAllPost/${page}/${limit}`
         return http.get(url);
     },
 

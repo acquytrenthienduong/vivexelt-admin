@@ -79,6 +79,8 @@
                           accept="image/jpeg, image/png"
                           class="button"
                         ></b-form-file>
+
+                        {{ imgFile }}
                       </b-col>
                     </b-row>
                   </b-col>
@@ -121,7 +123,7 @@ export default {
       imageFile: null,
       submitting: false,
       isLoading: false,
-      file: '',
+      imgFile: null,
     }
   },
   async mounted() {
@@ -135,13 +137,15 @@ export default {
       let res = await postService.getPostById(id)
       if (res && res.success) {
         this.post = res.post
+        // this.imgFile = res.post.image_thumbnail
         this.post.image_thumbnail = 'http://localhost:3000/post/sendImagePost/' + id
         console.log(res.post)
       }
     },
     onSubmit() {
+      console.log('12312')
       let formData = new FormData()
-      formData.append('profile_pic', this.file)
+      formData.append('profile_pic', this.imgFile)
       formData.append('title', this.post.title)
       formData.append('short_description', this.post.short_description)
       formData.append('long_description', this.post.long_description)
@@ -158,6 +162,7 @@ export default {
                 type: 'success',
                 message: 'Update success',
               })
+              this.$router.push({ name: 'jobs' })
             }
           })
           .catch((err) => {
@@ -181,17 +186,8 @@ export default {
         })
         valid = false
       }
-      if (!this.file && this.file.length < 1) {
-        this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'danger',
-          message: 'Image is invalid',
-        })
-        valid = false
-      }
       if (
-        (!this.post.short_description && this.post.short_description < 1) ||
+        (!this.post.short_description && this.post.short_description.length < 1) ||
         this.post.short_description.length > 500
       ) {
         this.$notify({
@@ -202,7 +198,16 @@ export default {
         })
         valid = false
       }
-      if (!this.post.long_description && this.post.long_description < 1) {
+      if (this.imageFile === null) {
+        this.$notify({
+          verticalAlign: 'bottom',
+          horizontalAlign: 'center',
+          type: 'danger',
+          message: 'Image not change',
+        })
+        valid = false
+      }
+      if (!this.post.long_description && this.post.long_description.length < 1) {
         this.$notify({
           verticalAlign: 'bottom',
           horizontalAlign: 'center',
@@ -216,7 +221,7 @@ export default {
     },
 
     fileChanges(file) {
-      this.gallery.path = URL.createObjectURL(file)
+      this.post.image_thumbnail = URL.createObjectURL(file)
       this.$emit('imgChange', file)
     },
     removeAccents(str) {

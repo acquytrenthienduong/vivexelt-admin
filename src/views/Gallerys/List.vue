@@ -65,7 +65,7 @@
               <el-table-column label="Image" prop="short_description" min-width="300px">
                 <template v-slot="{ row }">
                   <span class="font-16">
-                    <img alt="Image placeholder" :src="url + row.id" width="200px" />
+                    <img alt="Image placeholder" :src="url + row.id" width="50px" />
                   </span>
                 </template>
               </el-table-column>
