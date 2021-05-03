@@ -43,43 +43,43 @@
                 </b-col>
               </b-row>
             </div>
-            <!-- <div class="pl-lg-4">
-              <b-row>
-                <b-col lg="8">
-                  <b-form-file
-                    @input="fileChanges"
-                    v-model="imgFile"
-                    placeholder="Select file"
-                    drop-placeholder="Drop file here..."
-                    accept="image/jpeg, image/png"
-                    class="button"
-                    name="profile_pic"
-                  ></b-form-file>
-                </b-col>
 
-              </b-row>
-            </div> -->
             <div class="pl-lg-4">
               <b-row>
                 <b-col lg="8">
-                  <input
-                    type="file"
-                    name="profile_pic"
-                    id="file"
-                    ref="file"
-                    v-on:change="handleFileUpload()"
-                  />
+                  <base-textarea
+                    type="text"
+                    label="Long Description"
+                    placeholder="Long Description"
+                    v-model="post.long_description"
+                    name="Long Description"
+                    ref="Long Description"
+                    :rules="{ required: true, max: 1000 }"
+                  >
+                  </base-textarea>
                 </b-col>
               </b-row>
             </div>
-            <hr class="my-4" />
 
-            <h6 class="heading-small text-muted mb-4">Long Description</h6>
-            <dpmx-editor
-              :value="post.long_description"
-              v-model="post.long_description"
-              :height="500"
-            />
+            <div class="pl-lg-4">
+              <b-row>
+                <b-col lg="8">
+                  <img :src="post.image_thumbnail" width="200px" />
+                  <b-row>
+                    <b-col>
+                      <b-form-file
+                        @input="fileChanges"
+                        v-model="imgFile"
+                        placeholder="Select file"
+                        drop-placeholder="Drop file here..."
+                        accept="image/jpeg, image/png"
+                        class="button"
+                      ></b-form-file>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+            </div>
 
             <hr class="my-4" />
             <base-button
@@ -117,6 +117,7 @@ export default {
           long_description: '',
           image_thumbnail: '',
           seoTitle: '',
+          imgFile: null,
         }
       },
       // create / edit
@@ -185,7 +186,7 @@ export default {
     },
     onSubmit() {
       let formData = new FormData()
-      formData.append('profile_pic', this.file)
+      formData.append('profile_pic', this.imgFile)
       formData.append('title', this.post.title)
       formData.append('short_description', this.post.short_description)
       formData.append('long_description', this.post.long_description)
@@ -210,15 +211,6 @@ export default {
           horizontalAlign: 'center',
           type: 'danger',
           message: 'Title is invalid',
-        })
-        valid = false
-      }
-      if (!this.file && this.file.length < 1) {
-        this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'danger',
-          message: 'Image is invalid',
         })
         valid = false
       }
@@ -248,7 +240,7 @@ export default {
     },
     fileChanges(file) {
       this.post.image_thumbnail = URL.createObjectURL(file)
-      // this.$emit('imgChange', file)
+      this.$emit('imgChange', file)
     },
 
     handleFileUpload() {

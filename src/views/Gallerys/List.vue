@@ -139,7 +139,7 @@ export default {
         message: '',
       },
       entityId: 0,
-      url: 'http://localhost:3000/image/sendImage',
+      url: 'http://localhost:3000/image/sendImage/',
     }
   },
   methods: {

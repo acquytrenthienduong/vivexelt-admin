@@ -36,7 +36,7 @@
               <div class="pl-lg-4">
                 <b-row>
                   <b-col lg="8">
-                    <img :src="gallery.path" class="card-img-top" />
+                    <img :src="gallery.path" width="200px" />
                     <b-row>
                       <b-col>
                         <b-form-file

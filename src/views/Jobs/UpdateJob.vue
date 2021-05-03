@@ -47,30 +47,45 @@
                   </b-col>
                 </b-row>
               </div>
+
               <div class="pl-lg-4">
                 <b-row>
                   <b-col lg="8">
-                    <input
-                      type="file"
-                      name="profile_pic"
-                      id="file"
-                      ref="file"
-                      v-on:change="handleFileUpload()"
-                    />
+                    <base-textarea
+                      type="text"
+                      label="Long Description"
+                      placeholder="Long Description"
+                      v-model="post.long_description"
+                      name="Long Description"
+                      ref="Long Description"
+                      :rules="{ required: true, max: 1000 }"
+                    >
+                    </base-textarea>
+                  </b-col>
+                </b-row>
+              </div>
 
+              <div class="pl-lg-4">
+                <b-row>
+                  <b-col lg="8">
+                    <img :src="this.post.image_thumbnail" width="200px" />
+                    <b-row>
+                      <b-col>
+                        <b-form-file
+                          @input="fileChanges"
+                          v-model="imgFile"
+                          placeholder="Select file"
+                          drop-placeholder="Drop file here..."
+                          accept="image/jpeg, image/png"
+                          class="button"
+                        ></b-form-file>
+                      </b-col>
+                    </b-row>
                   </b-col>
                 </b-row>
               </div>
               <hr class="my-4" />
 
-              <h6 class="heading-small text-muted mb-4">Long Description</h6>
-              <dpmx-editor
-                :value="post.long_description"
-                v-model="post.long_description"
-                :height="500"
-              />
-
-              <hr class="my-4" />
               <base-button
                 type="primary"
                 :disabled="submitting"
@@ -99,6 +114,7 @@ export default {
       post: {
         id: 0,
         title: '',
+        image_thumbnail: '',
         short_description: '',
         long_description: '',
       },
@@ -119,7 +135,8 @@ export default {
       let res = await postService.getPostById(id)
       if (res && res.success) {
         this.post = res.post
-        console.log(res.post);
+        this.post.image_thumbnail = 'http://localhost:3000/post/sendImagePost/' + id
+        console.log(res.post)
       }
     },
     onSubmit() {
@@ -197,8 +214,10 @@ export default {
 
       return valid
     },
-    handleFileUpload() {
-      this.file = this.$refs.file.files[0]
+
+    fileChanges(file) {
+      this.gallery.path = URL.createObjectURL(file)
+      this.$emit('imgChange', file)
     },
     removeAccents(str) {
       return str

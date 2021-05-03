@@ -128,7 +128,8 @@
                   <span class="font-16">
                     <img
                       alt="Image placeholder"
-                      :src="row.image_thumbnail"
+                      width="200px"
+                      :src="url + row.id"
                     />
                   </span>
                 </template>
@@ -235,6 +236,7 @@ export default {
       visibleBulkAction: false,
       firstTime: true,
       posts: [],
+      url: 'http://localhost:3000/post/sendImagePost/'
     }
   },
   computed: {
