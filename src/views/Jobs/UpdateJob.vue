@@ -81,7 +81,7 @@
                 </b-form>
               </b-col>
               <b-col lg="4">
-                <img :src="this.post.image_thumbnail" width="100%" />
+                <img :src="this.post.filename" width="100%" />
                 <label class="form-control-label">Link video</label>
                 <b-form-file
                   @input="fileChanges"
@@ -110,6 +110,7 @@ export default {
         title: '',
         image_thumbnail: '',
         short_description: '',
+        filename: '',
         link_video: '',
       },
       imageFile: null,
@@ -130,7 +131,7 @@ export default {
       if (res && res.success) {
         this.post = res.post
         // this.imgFile = res.post.image_thumbnail
-        this.post.image_thumbnail = 'http://localhost:3000/post/sendImagePost/' + id
+        this.post.filename = 'http://localhost:3000/post/sendImagePost/' + this.post.filename
         console.log(res.post)
       }
     },
@@ -157,7 +158,7 @@ export default {
                 type: 'success',
                 message: 'Update success',
               })
-              this.$router.push({ name: 'jobs' })
+              this.$router.push({ name: 'videos' })
             }
           })
           .catch((err) => {

@@ -6,18 +6,18 @@ import NotFound from "@/views/NotFoundPage.vue";
 const routes = [
   {
     path: "/",
-    redirect: "dashboard",
+    redirect: "posts",
     component: DashboardLayout,
     children: [
       {
         path: "/posts",
-        name: "jobs",
+        name: "videos",
         meta: { hideFooter: true },
         component: () => import("../views/Jobs/List.vue")
       },
       {
         path: "/posts/create",
-        name: "jobCreate",
+        name: "postCreate",
         meta: { hideFooter: true },
         component: () => import("../views/Jobs/CreateNew.vue")
       },
@@ -45,12 +45,12 @@ const routes = [
         meta: { hideFooter: true },
         component: () => import("../views/Gallerys/UpdateGallery.vue")
       },
-      {
-        path: "/departments",
-        name: "departments",
-        meta: { hideFooter: true },
-        component: () => import("../views/DepartFos/List.vue")
-      },
+      // {
+      //   path: "/departments",
+      //   name: "departments",
+      //   meta: { hideFooter: true },
+      //   component: () => import("../views/DepartFos/List.vue")
+      // },
       {
         path: "/dashboard",
         name: "dashboard",
@@ -59,26 +59,26 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () => import("../views/Dashboard.vue")
       },
-      {
-        path: "/icons",
-        name: "icons",
-        component: () => import("../views/Icons.vue")
-      },
-      {
-        path: "/profile",
-        name: "profile",
-        component: () => import("../views/Pages/UserProfile.vue")
-      },
-      {
-        path: "/maps",
-        name: "maps",
-        component: () => import("../views/GoogleMaps.vue")
-      },
-      {
-        path: "/tables",
-        name: "tables",
-        component: () => import("../views/RegularTables.vue")
-      }
+      // {
+      //   path: "/icons",
+      //   name: "icons",
+      //   component: () => import("../views/Icons.vue")
+      // },
+      // {
+      //   path: "/profile",
+      //   name: "profile",
+      //   component: () => import("../views/Pages/UserProfile.vue")
+      // },
+      // {
+      //   path: "/maps",
+      //   name: "maps",
+      //   component: () => import("../views/GoogleMaps.vue")
+      // },
+      // {
+      //   path: "/tables",
+      //   name: "tables",
+      //   component: () => import("../views/RegularTables.vue")
+      // }
     ]
   },
   {

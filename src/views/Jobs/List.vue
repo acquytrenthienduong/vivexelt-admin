@@ -60,7 +60,7 @@
               <el-table-column label="Image thumbnail" prop="short_description" min-width="300px">
                 <template v-slot="{ row }">
                   <span class="font-16">
-                    <img alt="Image placeholder" width="50px" :src="url + row.id" />
+                    <img alt="Image placeholder" width="50px" :src="url + row.filename" />
                   </span>
                 </template>
               </el-table-column>
@@ -75,7 +75,7 @@
 
               <el-table-column label="Create At" min-width="150px" prop="status">
                 <template v-slot="{ row }">
-                  <span>{{ new Date(row.createAt) }}</span>
+                  <span>{{ new Date(row.createAt).toISOString().split('T')[0] }}</span>
                 </template>
               </el-table-column>
 

@@ -45,7 +45,7 @@
                 </b-form></b-col
               >
               <b-col lg="4">
-                <img :src="gallery.path" width="100%" />
+                <img :src="gallery.filename" width="100%" />
                 <label class="form-control-label">Image</label>
 
                 <b-form-file
@@ -73,6 +73,7 @@ export default {
       gallery: {
         path: '',
         position: '',
+        filename: '',
       },
       imgFile: null,
       submitting: false,
@@ -90,7 +91,7 @@ export default {
       console.log('res', res)
       if (res && res.success) {
         this.gallery = res.gallery
-        this.gallery.path = 'http://localhost:3000/image/sendImage/' + id
+        this.gallery.filename = 'http://localhost:3000/image/sendImage/' + this.gallery.filename
       }
     },
     async onSubmit() {

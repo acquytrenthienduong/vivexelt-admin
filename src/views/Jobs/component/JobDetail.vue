@@ -200,7 +200,7 @@ export default {
           type: 'success',
           message: 'Create success',
         })
-        this.$router.push({ name: 'jobs' })
+        this.$router.push({ name: 'videos' })
       }
     },
     validate() {

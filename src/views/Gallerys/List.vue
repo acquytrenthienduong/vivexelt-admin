@@ -65,14 +65,14 @@
               <el-table-column label="Image" prop="short_description" min-width="300px">
                 <template v-slot="{ row }">
                   <span class="font-16">
-                    <img alt="Image placeholder" :src="url + row.id" width="50px" />
+                    <img alt="Image placeholder" :src="url + row.filename" width="50px" />
                   </span>
                 </template>
               </el-table-column>
 
               <el-table-column label="Create At" min-width="150px" prop="status">
                 <template v-slot="{ row }">
-                  <span>{{ new Date(row.createAt) }}</span>
+                  <span>{{ new Date(row.createAt).toISOString().split('T')[0] }}</span>
                 </template>
               </el-table-column>
 
