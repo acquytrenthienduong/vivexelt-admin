@@ -130,7 +130,7 @@ export default {
       let res = await postService.getPostById(id)
       if (res && res.success) {
         this.post = res.post
-        this.post.image_thumbnail = 'http://localhost:3000/post/send-image-post/' + this.post.filename
+        this.post.image_thumbnail = 'http://localhost:3000/public/send-image/' + this.post.filename
         console.log(res.post)
       }
     },
