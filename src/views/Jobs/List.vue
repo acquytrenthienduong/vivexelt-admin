@@ -174,7 +174,7 @@ export default {
       visibleBulkAction: false,
       firstTime: true,
       posts: [],
-      url: 'http://localhost:3000/post/sendImagePost/',
+      url: 'http://localhost:3000/post/send-image-post/',
     }
   },
   computed: {

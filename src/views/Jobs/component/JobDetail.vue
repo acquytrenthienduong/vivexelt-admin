@@ -144,7 +144,7 @@ export default {
   },
   computed: {
     title() {
-      return this.mode === 'create' ? 'Create Post' : 'Update Post'
+      return this.mode === 'create' ? 'Create Video' : 'Update Video'
     },
     getMinimumDegrees() {
       return MinimumDegree.map((s) => {
@@ -185,7 +185,7 @@ export default {
     },
     onSubmit() {
       let formData = new FormData()
-      formData.append('profile_pic', this.imgFile)
+      formData.append('vivexelt_pic', this.imgFile)
       formData.append('title', this.post.title)
       formData.append('short_description', this.post.short_description)
       formData.append('link_video', this.post.link_video)

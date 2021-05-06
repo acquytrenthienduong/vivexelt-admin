@@ -11,7 +11,7 @@
               <div class="text-center text-muted mb-4">
                 <div class="text-muted text-center mt-2 mb-3">
                   <b-img
-                    src="https://www.myjob.mu/help/images/logoMU.png"
+                    src="../../public/img/assets/logo.png"
                     fluid
                     alt="Responsive image"
                     style="margin-bottom: 50px;"

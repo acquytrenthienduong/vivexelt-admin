@@ -87,7 +87,7 @@ export default {
     async init() {},
     async onSubmit() {
       let formData = new FormData()
-      formData.append('profile_pic', this.imgFile)
+      formData.append('vivexelt_pic', this.imgFile)
       formData.append('position', this.gallery.position)
 
       if (this.validate()) {

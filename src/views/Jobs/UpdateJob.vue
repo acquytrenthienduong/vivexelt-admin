@@ -81,8 +81,8 @@
                 </b-form>
               </b-col>
               <b-col lg="4">
-                <img :src="this.post.filename" width="100%" />
-                <label class="form-control-label">Link video</label>
+                <img :src="this.post.image_thumbnail" width="100%" />
+                <label class="form-control-label">Image</label>
                 <b-form-file
                   @input="fileChanges"
                   v-model="imgFile"
@@ -130,17 +130,16 @@ export default {
       let res = await postService.getPostById(id)
       if (res && res.success) {
         this.post = res.post
-        // this.imgFile = res.post.image_thumbnail
-        this.post.filename = 'http://localhost:3000/post/sendImagePost/' + this.post.filename
+        this.post.image_thumbnail = 'http://localhost:3000/post/send-image-post/' + this.post.filename
         console.log(res.post)
       }
     },
     onSubmit() {
       console.log('12312')
       let formData = new FormData()
-      formData.append('profile_pic', null)
+      formData.append('vivexelt_pic', null)
       if (this.imgFile != null) {
-        formData.append('profile_pic', this.imgFile)
+        formData.append('vivexelt_pic', this.imgFile)
       }
       formData.append('title', this.post.title)
       formData.append('short_description', this.post.short_description)

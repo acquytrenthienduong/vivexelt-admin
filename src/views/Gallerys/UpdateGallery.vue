@@ -45,7 +45,7 @@
                 </b-form></b-col
               >
               <b-col lg="4">
-                <img :src="gallery.filename" width="100%" />
+                <img :src="gallery.path" width="100%" />
                 <label class="form-control-label">Image</label>
 
                 <b-form-file
@@ -91,16 +91,15 @@ export default {
       console.log('res', res)
       if (res && res.success) {
         this.gallery = res.gallery
-        this.gallery.filename = 'http://localhost:3000/image/sendImage/' + this.gallery.filename
+        this.gallery.path = 'http://localhost:3000/image/send-image/' + this.gallery.filename
       }
     },
     async onSubmit() {
       let formData = new FormData()
-      formData.append('profile_pic', null)
+      formData.append('vivexelt_pic', null)
       if (this.imgFile != null) {
-        formData.append('profile_pic', this.imgFile)
+        formData.append('vivexelt_pic', this.imgFile)
       }
-      // formData.append('profile_pic', this.imgFile)
       formData.append('position', this.gallery.position)
 
       if (this.validate()) {
