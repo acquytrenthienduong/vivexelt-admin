@@ -26,7 +26,9 @@
                 </div>
                 <b-form-input placeholder="Search" type="text" v-model="filter.name"></b-form-input>
                 <b-input-group-append>
-                  <b-button v-b-toggle.collapse-1 variant="info">Search</b-button>
+                  <b-button v-b-toggle.collapse-1 variant="info" @click="debounceFetchVideos()"
+                    >Search</b-button
+                  >
                 </b-input-group-append>
               </b-input-group>
               <b-collapse id="collapse-4" v-model="visibleBulkAction" class="mt-2">
@@ -218,9 +220,9 @@ export default {
       await this.countJob()
       this.isLoading = false
     },
-    debounceFetchOrdersData: debounce(
-      async function() {
-        this.filterJobs()
+    debounceFetchVideos: debounce(
+      async function () {
+        this.init()
       },
       500,
       {
@@ -425,7 +427,7 @@ export default {
   watch: {
     filter: {
       handler(val) {
-        this.init()
+        this.debounceFetchVideos()
       },
       deep: true,
     },

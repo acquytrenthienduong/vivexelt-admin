@@ -183,7 +183,7 @@ export default {
     async init() {
       // await this.getAllCountries()
     },
-    onSubmit() {
+    async onSubmit() {
       let formData = new FormData()
       formData.append('vivexelt_pic', this.imgFile)
       formData.append('title', this.post.title)
@@ -193,7 +193,7 @@ export default {
       formData.append('seoTitle', this.post.seoTitle)
 
       if (this.validate() && this.mode === 'create') {
-        let res = postService.createPost(formData)
+        let res = await postService.createPost(formData)
         this.$notify({
           verticalAlign: 'bottom',
           horizontalAlign: 'center',
