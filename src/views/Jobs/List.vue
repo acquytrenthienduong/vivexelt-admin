@@ -146,7 +146,7 @@ export default {
       filter: {
         page: 1,
         name: '',
-        limit: 2,
+        limit: 50,
         min_degree: undefined,
         departments: [],
         foses: [],
