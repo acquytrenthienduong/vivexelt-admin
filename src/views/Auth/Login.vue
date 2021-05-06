@@ -99,12 +99,12 @@ export default {
       }
     },
     async afterSignedIn() {
-      this.$router.push({ name: 'dashboard' })
+      this.$router.push({ name: 'posts' })
     },
   },
   mounted() {
     if (AuthService.isAuthenticated()) {
-      this.$router.push({ name: 'dashboard' })
+      this.$router.push({ name: 'posts' })
     }
   },
 }
