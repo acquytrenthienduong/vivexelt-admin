@@ -14,9 +14,9 @@
                 <h3 class="mb-0">Create Gallery</h3>
               </b-col>
             </b-row>
-            <b-row>
-              <b-col lg="8">
-                <b-form @submit.prevent="onSubmit">
+            <b-form @submit.prevent="onSubmit">
+              <b-row>
+                <b-col lg="8">
                   <div class="pl-lg-4">
                     <b-row>
                       <b-col>
@@ -39,6 +39,20 @@
                       <b-col lg="8"> </b-col>
                     </b-row>
                   </div>
+                </b-col>
+                <b-col lg="4">
+                  <img :src="gallery.path" width="100%" />
+                  <label class="form-control-label">Image</label>
+                  <b-form-file
+                    @input="fileChanges"
+                    v-model="imgFile"
+                    placeholder="Select file"
+                    drop-placeholder="Drop file here..."
+                    accept="image/jpeg, image/png"
+                    class="button"
+                  ></b-form-file>
+                </b-col>
+                <b-col lg="12">
                   <base-button
                     type="primary"
                     :disabled="submitting"
@@ -48,21 +62,9 @@
                   >
                     Create
                   </base-button>
-                </b-form>
-              </b-col>
-              <b-col lg="4">
-                <img :src="gallery.path" width="100%" />
-                <label class="form-control-label">Image</label>
-                <b-form-file
-                  @input="fileChanges"
-                  v-model="imgFile"
-                  placeholder="Select file"
-                  drop-placeholder="Drop file here..."
-                  accept="image/jpeg, image/png"
-                  class="button"
-                ></b-form-file>
-              </b-col>
-            </b-row>
+                </b-col>
+              </b-row>
+            </b-form>
           </card>
         </b-col>
       </b-row>
@@ -84,7 +86,7 @@ export default {
     }
   },
   methods: {
-    async init() {},
+    async init() { },
     async onSubmit() {
       let formData = new FormData()
       formData.append('vivexelt_pic', this.imgFile)
@@ -98,7 +100,7 @@ export default {
           verticalAlign: 'bottom',
           horizontalAlign: 'center',
           type: 'success',
-          message: 'Create success11',
+          message: 'Create success',
         })
         this.$router.push({ name: 'gallerys' })
 
