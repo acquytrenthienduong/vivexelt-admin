@@ -91,7 +91,7 @@ export default {
       console.log('res', res)
       if (res && res.success) {
         this.gallery = res.gallery
-        this.gallery.path = 'http://localhost:3000/public/send-image/' + this.gallery.filename
+        this.gallery.path = process.env.VUE_APP_BASE_API_ENDPOINT + '/public/image/' + this.gallery.filename
       }
     },
     async onSubmit() {

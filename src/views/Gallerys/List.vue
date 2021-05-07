@@ -139,7 +139,7 @@ export default {
         message: '',
       },
       entityId: 0,
-      url: 'http://localhost:3000/public/send-image/',
+      url: process.env.VUE_APP_BASE_API_ENDPOINT + '/public/image/',
     }
   },
   methods: {
