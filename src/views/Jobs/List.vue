@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="isLoading">
-      <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success"> </base-header>
+      <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue"> </base-header>
       <b-container fluid class="mt--7">
         <card>
           <dpmx-cl type="bullet"></dpmx-cl>
@@ -9,7 +9,7 @@
       </b-container>
     </div>
 
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success" v-if="!isLoading">
+    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue" v-if="!isLoading">
       <b-row> </b-row>
     </base-header>
     <b-container fluid class="mt--7" v-if="!isLoading">
@@ -45,7 +45,14 @@
               @selection-change="selectionChanged"
             >
               <el-table-column type="selection" width="90"></el-table-column>
-              <el-table-column label="Title" min-width="100px" prop="name">
+              <el-table-column label="Image thumbnail" prop="short_description" min-width="90px">
+                <template v-slot="{ row }">
+                  <span class="font-16">
+                    <img alt="Image placeholder" width="50px" :src="url + row.filename" />
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="Title" min-width="300px" prop="name">
                 <template v-slot="{ row }">
                   <router-link :to="`/post/${row.id}`">
                     <b-media no-body class="align-items-center">
@@ -59,15 +66,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="Image thumbnail" prop="short_description" min-width="300px">
-                <template v-slot="{ row }">
-                  <span class="font-16">
-                    <img alt="Image placeholder" width="50px" :src="url + row.filename" />
-                  </span>
-                </template>
-              </el-table-column>
-
-              <el-table-column label="Link video" min-width="300px">
+              <el-table-column label="Link video" min-width="100px">
                 <template v-slot="{ row }">
                   <span class="font-16">
                     <a :href="row.link_video">Link video</a>
@@ -389,11 +388,9 @@ export default {
             verticalAlign: 'bottom',
             horizontalAlign: 'center',
             type: 'success',
-            message: `Delete job successfully`,
+            message: `Delete successfully`,
           })
-          await this.init()
-          this.isLoading = false
-          this.closeConfirmModal()
+
         }
       } else {
         this.jobSelected.forEach((e) => {
@@ -403,7 +400,7 @@ export default {
                 verticalAlign: 'bottom',
                 horizontalAlign: 'center',
                 type: 'success',
-                message: `Delete job successfully`,
+                message: `Delete successfully`,
               })
             } else {
               this.$notify({
@@ -416,7 +413,9 @@ export default {
           })
         })
       }
-
+      this.entityId = 0
+      this.jobSelected = []
+      await this.init()
       this.isLoading = false
       this.closeConfirmModal()
     },

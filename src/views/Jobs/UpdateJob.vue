@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
+    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue">
       <!-- Card stats -->
     </base-header>
 
@@ -67,8 +67,6 @@
                     </b-row>
                   </div>
 
-                  <hr class="my-4" />
-
                   <base-button
                     type="primary"
                     :disabled="submitting"
@@ -81,8 +79,8 @@
                 </b-form>
               </b-col>
               <b-col lg="4">
-                <img :src="this.post.image_thumbnail" width="100%" />
                 <label class="form-control-label">Image</label>
+                <img :src="this.post.image_thumbnail" width="100%" />
                 <b-form-file
                   @input="fileChanges"
                   v-model="imgFile"
@@ -130,12 +128,12 @@ export default {
       let res = await postService.getPostById(id)
       if (res && res.success) {
         this.post = res.post
-        this.post.image_thumbnail = process.env.VUE_APP_BASE_API_ENDPOINT+ '/public/image/' + this.post.filename
+        this.post.image_thumbnail = process.env.VUE_APP_BASE_API_ENDPOINT + '/public/image/' + this.post.filename
         console.log(res.post)
       }
     },
-    onSubmit() {
-      console.log('12312')
+    async onSubmit() {
+      this.submitting = true
       let formData = new FormData()
       formData.append('vivexelt_pic', null)
       if (this.imgFile != null) {
@@ -147,28 +145,26 @@ export default {
       this.post.seoTitle = this.removeAccents(this.post.title)
       formData.append('seoTitle', this.post.seoTitle)
       if (this.validate()) {
-        postService
-          .updatePostById(formData, this.$route.params.id)
-          .then((result) => {
-            if (result && result.success) {
-              this.$notify({
-                verticalAlign: 'bottom',
-                horizontalAlign: 'center',
-                type: 'success',
-                message: 'Update success',
-              })
-              this.$router.push({ name: 'videos' })
-            }
+        const res = await postService.updatePostById(formData, this.$route.params.id)
+        if (res && res.success) {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'success',
+            message: 'Update successfully',
           })
-          .catch((err) => {
-            this.$notify({
-              verticalAlign: 'bottom',
-              horizontalAlign: 'center',
-              type: 'danger',
-              message: err.message,
-            })
+          this.submitting = false
+          this.$router.push({ name: 'videos' })
+        } else {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'danger',
+            message: 'Something went wrong',
           })
+        }
       }
+      this.submitting = false
     },
     validate() {
       let valid = true

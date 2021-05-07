@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
+    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue">
       <!-- Card stats -->
     </base-header>
 
@@ -95,6 +95,7 @@ export default {
       }
     },
     async onSubmit() {
+      this.submitting = true
       let formData = new FormData()
       formData.append('vivexelt_pic', null)
       if (this.imgFile != null) {
@@ -103,28 +104,26 @@ export default {
       formData.append('position', this.gallery.position)
 
       if (this.validate()) {
-        galleryService
-          .updateGalleryById(formData, this.$route.params.id)
-          .then((result) => {
-            if (result && result.success) {
-              this.$notify({
-                verticalAlign: 'bottom',
-                horizontalAlign: 'center',
-                type: 'success',
-                message: 'Update success',
-              })
-              this.$router.push({ name: 'gallerys' })
-            }
+        const res = await galleryService.updateGalleryById(formData, this.$route.params.id)
+        if (res && res.success) {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'success',
+            message: 'Create successfully',
           })
-          .catch((err) => {
-            this.$notify({
-              verticalAlign: 'bottom',
-              horizontalAlign: 'center',
-              type: 'danger',
-              message: err.message,
-            })
+          this.submitting = false
+          this.$router.push({ name: 'gallerys' })
+        } else {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'danger',
+            message: 'Something went wrong',
           })
+        }
       }
+      this.submitting = false
     },
     validate() {
       let valid = true

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Header -->
-    <div class="header bg-gradient-success py-7 py-lg-8 pt-lg-9"></div>
+    <div class="header bg-gradient-blue py-7 py-lg-8 pt-lg-9"></div>
     <!-- Page content -->
     <b-container class="mt--8 pb-5">
       <b-row class="justify-content-center">
@@ -14,13 +14,13 @@
                     src="img/assets/logo.png"
                     fluid
                     alt="Responsive image"
-                    style="margin-bottom: 50px;"
+                    style="margin-bottom: 50px"
                   ></b-img>
                 </div>
               </div>
               <validation-observer v-slot="{ handleSubmit }" ref="formValidator">
                 <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
-                  <div v-if="check" style="color: red;">Wrong username or password</div>
+                  <div v-if="check" style="color: red">Wrong username or password</div>
                   <base-input
                     alternative
                     class="mb-3"
@@ -99,12 +99,12 @@ export default {
       }
     },
     async afterSignedIn() {
-      this.$router.push({ name: 'posts' })
+      this.$router.push({ name: 'videos' })
     },
   },
   mounted() {
     if (AuthService.isAuthenticated()) {
-      this.$router.push({ name: 'posts' })
+      this.$router.push({ name: 'videos' })
     }
   },
 }

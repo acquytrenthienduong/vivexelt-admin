@@ -11,7 +11,7 @@
           </b-row>
           <b-row>
             <b-col lg="8">
-              <b-form @submit.prevent="onSubmit">
+              <b-form>
                 <div class="pl-lg-4">
                   <b-row>
                     <b-col lg="12">
@@ -35,22 +35,6 @@
                 <div class="pl-lg-4">
                   <b-row>
                     <b-col>
-                      <base-input
-                        type="text"
-                        label="Link Video"
-                        placeholder="Link Video"
-                        v-model="post.link_video"
-                        name="Link Video"
-                        ref="Link Video"
-                        :rules="{ required: true }"
-                      >
-                      </base-input>
-                    </b-col>
-                  </b-row>
-                </div>
-                <div class="pl-lg-4">
-                  <b-row>
-                    <b-col>
                       <base-textarea
                         type="text"
                         label="Short Description"
@@ -64,12 +48,29 @@
                     </b-col>
                   </b-row>
                 </div>
+                <div class="pl-lg-4">
+                  <b-row>
+                    <b-col>
+                      <base-input
+                        type="text"
+                        label="Link Video"
+                        placeholder="Link Video"
+                        v-model="post.link_video"
+                        name="Link Video"
+                        ref="Link Video"
+                        :rules="{ required: true }"
+                      >
+                      </base-input>
+                    </b-col>
+                  </b-row>
+                </div>
+
                 <hr class="my-4" />
                 <base-button
                   type="primary"
                   :disabled="submitting"
                   :loading="submitting"
-                  native-type="submit"
+                  @click="onSubmit()"
                   class="my-4"
                 >
                   {{ btnSubmitTitle }}
@@ -77,8 +78,8 @@
               </b-form>
             </b-col>
             <b-col lg="4">
+              <label class="form-control-label">Image</label>
               <img :src="post.image_thumbnail" width="100%" />
-              <label class="form-control-label">Link video</label>
               <b-form-file
                 @input="fileChanges"
                 v-model="imgFile"
@@ -184,6 +185,7 @@ export default {
       // await this.getAllCountries()
     },
     async onSubmit() {
+      this.submitting = true
       let formData = new FormData()
       formData.append('vivexelt_pic', this.imgFile)
       formData.append('title', this.post.title)
@@ -194,14 +196,25 @@ export default {
 
       if (this.validate() && this.mode === 'create') {
         let res = await postService.createPost(formData)
-        this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'success',
-          message: 'Create success',
-        })
-        this.$router.push({ name: 'videos' })
+        if (res && res.success) {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'success',
+            message: 'Create successfully',
+          })
+          this.submitting = false
+          this.$router.push({ name: 'videos' })
+        } else {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'danger',
+            message: 'Something went wrong',
+          })
+        }
       }
+      this.submitting = false
     },
     validate() {
       let valid = true

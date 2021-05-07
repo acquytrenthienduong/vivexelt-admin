@@ -14,7 +14,7 @@ export default {
 
     createPost(payload) {
         const url = '/post/create-post'
-        http.post(url, payload);
+        return http.post(url, payload);
     },
 
     getPostById(id) {

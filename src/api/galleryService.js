@@ -9,7 +9,7 @@ export default {
 
     createGallery(payload) {
         const url = '/image/upload-one'
-        http.post(url, payload);
+        return http.post(url, payload);
     },
 
     getGalleryById(id) {

@@ -2,14 +2,14 @@
   <div>
     <b-card no-body class="bg-default shadow"></b-card>
     <div v-if="isLoading">
-      <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success"> </base-header>
+      <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue"> </base-header>
       <b-container fluid class="mt--7">
         <card>
           <dpmx-cl type="bullet"></dpmx-cl>
         </card>
       </b-container>
     </div>
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success" v-if="!isLoading">
+    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue" v-if="!isLoading">
       <!-- Card stats -->
     </base-header>
     <b-container fluid class="mt--7" v-if="!isLoading">
@@ -213,7 +213,9 @@
 
       <template slot="footer">
         <base-button type="link" class="ml-auto" @click="closeModal">Close</base-button>
-        <base-button type="primary" @click="doAction" :disabled="isLoading">Save changes</base-button>
+        <base-button type="primary" @click="doAction" :disabled="isLoading"
+          >Save changes</base-button
+        >
       </template>
     </modal>
 

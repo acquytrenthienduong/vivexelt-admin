@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
+    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue">
       <!-- Card stats -->
     </base-header>
 
@@ -88,24 +88,32 @@ export default {
   methods: {
     async init() { },
     async onSubmit() {
+      this.submitting = true
       let formData = new FormData()
       formData.append('vivexelt_pic', this.imgFile)
       formData.append('position', this.gallery.position)
-
       if (this.validate()) {
         let res = await galleryService.createGallery(formData)
-        console.log('res', res)
-        // if (res || res.success) {
-        this.$notify({
-          verticalAlign: 'bottom',
-          horizontalAlign: 'center',
-          type: 'success',
-          message: 'Create success',
-        })
-        this.$router.push({ name: 'gallerys' })
+        if (res || res.success) {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'success',
+            message: 'Create successfully',
+          })
+          this.submitting = false
 
-        // }
+          this.$router.push({ name: 'gallerys' })
+        } else {
+          this.$notify({
+            verticalAlign: 'bottom',
+            horizontalAlign: 'center',
+            type: 'danger',
+            message: 'Something went wrong',
+          })
+        }
       }
+      this.submitting = false
     },
     validate() {
       let valid = true

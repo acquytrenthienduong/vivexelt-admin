@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="isLoading">
-      <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success"> </base-header>
+      <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue"> </base-header>
       <b-container fluid class="mt--7">
         <card>
           <dpmx-cl type="bullet"></dpmx-cl>
@@ -9,8 +9,7 @@
       </b-container>
     </div>
 
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success" v-if="!isLoading">
-    </base-header>
+    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-blue" v-if="!isLoading"> </base-header>
 
     <b-container fluid class="mt--7" v-if="!isLoading">
       <b-row>

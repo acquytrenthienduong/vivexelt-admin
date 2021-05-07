@@ -47,7 +47,7 @@
               <img alt="Image placeholder" src="img/theme/team-4.jpg" />
             </span>
             <b-media-body class="ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm  font-weight-bold">John Snow</span>
+              <span class="mb-0 text-sm font-weight-bold">John Snow</span>
             </b-media-body>
           </b-media>
         </a>
@@ -57,9 +57,9 @@
             <h6 class="text-overflow m-0">Welcome!</h6>
           </b-dropdown-header>
           <div class="dropdown-divider"></div>
-          <b-dropdown-item href="#!">
+          <b-dropdown-item @click="logout()">
             <i class="ni ni-user-run"></i>
-            <span v-on:click="() => logout()">Logout</span>
+            <span>Logout</span>
           </b-dropdown-item>
         </template>
       </base-dropdown>
@@ -108,6 +108,7 @@ export default {
       this.activeNotifications = false
     },
     logout() {
+      console.log('aaa')
       this.$router.push({ name: 'logout' })
     },
   },
